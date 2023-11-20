@@ -11,13 +11,24 @@ const app = express();
 app.use(cors());
 
 const homePath = "/graphiql";
-const URL = "http://localhost";
 const PORT = 3001;
-var MONGO_URL = "mongodb://localhost:27017/HomeAway";
+const uri = "mongodb+srv://dbUser:Root111000@learningcluster.tcjx5.mongodb.net/";
 
 export const start = async () => {
   try {
-    const db = await MongoClient.connect(MONGO_URL);
+    // const db = await MongoClient.connect(MONGO_URL);
+
+
+    MongoClient.connect(uri, function (err, db) {
+   
+     if(err){
+      console.log(":::",err)
+     }
+     else{
+      console.log("mongo connected....")
+     }
+                
+});
 
     const Posts = db.collection("posts");
     const Comments = db.collection("comments");

@@ -10,9 +10,9 @@ let fs = require("fs");
 var path = require("path");
 var async = require("async");
 var mongo = require("./mongo");
-var mongoURL = "mongodb://localhost:27017/HomeAway";
 var MongoClient = require("mongodb").MongoClient;
-var url = "mongodb://localhost:27017";
+const url = "mongodb+srv://dbUser:Root111000@learningcluster.tcjx5.mongodb.net/";
+
 const dbName = "HomeAway";
 const graphqlHTTP = require("express-graphql");
 var HomeAway = require("./model/homeaway");
@@ -138,18 +138,20 @@ app.post("/login", function(req, res) {
 
 app.post("/login", function(req, res) {
   console.log("HERE");
+
   MongoClient.connect(
     url,
     {
-      poolSize: 10
+      poolSize: 10,
+      useNewUrlParser:true,useUnifiedTopology:true
       // other options can go here
     },
     function(err, client) {
       if (err) {
-        res.writeHead(400, {
+        client.writeHead(400, {
           "Content-Type": "text/plain"
         });
-        res.end("Invalid Credentials");
+        client.end("Invalid Credentials");
         throw err;
       } else {
         var username = req.body.username;
@@ -1687,7 +1689,7 @@ app.get("/properties/latestlistings/:id", function(req, res) {
 //     }
 //   });
 // });
-app.post("/traveller/signup", function(req, res) {
+app.post("/signup", function(req, res) {
   var results = {};
   console.log("In traveler signup handle request:", JSON.stringify(req.body));
 

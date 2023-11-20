@@ -4,7 +4,7 @@ const options = {
 };
 mongoose.Promise = global.Promise;
 mongoose.connect(
-  "mongodb://localhost:27017/HomeAway",
+  "mongodb+srv://dbUser:Root111000@learningcluster.tcjx5.mongodb.net/",
   options
 );
 module.exports = mongoose;
