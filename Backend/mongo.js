@@ -6,6 +6,8 @@ var db;
  */
 
 exports.myconnect = function(url, callback) {
+
+  console.log("::::::::::::::::::::::::")
   console.log("mongo.js url", url);
   if (db) {
     callback(db);

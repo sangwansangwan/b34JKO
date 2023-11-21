@@ -2,7 +2,7 @@ const mongoose = require("../mongoose");
 const Schema = mongoose.Schema;
 
 var UserSchema = new Schema({
-  username: { type: String, trim: true, index: { unique: true } },
+  username: { type: String, trim: true },
   //email: { type: String, trim: true, index: { unique: true } },
   password: { type: String, required: true },
   Fname: { type: String, trim: true, default: "" },
@@ -34,8 +34,8 @@ var Messages = new Schema({
 });
 
 var PropertySchema = new Schema({
-  prop_id: { type: Number, trim: true, index: { unique: true } },
-  headline: { type: String, trim: true, index: { unique: true } },
+  // prop_id: { type: Number, trim: true, index: { unique: true } },
+  // headline: { type: String, trim: true, index: { unique: true } },
   type: { type: String, required: true },
   location: { type: String, trim: true, default: "" },
   bed: { type: Number, trim: true, default: "" },

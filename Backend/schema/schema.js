@@ -1,6 +1,8 @@
 const graphql = require("graphql");
 const _ = require("lodash");
 var HomeAway = require("../model/homeaway");
+var UserModel = require("../model/user");
+
 var MongoClient = require("mongodb").MongoClient;
 const url =
   "mongodb+srv://dbUser:Root111000@learningcluster.tcjx5.mongodb.net/";
@@ -12,7 +14,7 @@ var passport = require("passport");
 
 const jwt = require("jsonwebtoken");
 
-const dbName = "test";
+const dbName = "vacationRental";
 const {
   GraphQLObjectType,
   GraphQLString,
@@ -128,75 +130,79 @@ const RootQuery = new GraphQLObjectType({
           password: args.password,
           //  id: args.id
         };
+
         return new Promise((resolve, reject) => {
-          console.log("argsss", user);
-
-          MongoClient.connect(
-            url,
-            { poolSize: 10, useNewUrlParser: true, useUnifiedTopology: true },
-            (err, client) => {
-              if (err) {
-                console.error("Error connecting to MongoDB:", err);
-                client.writeHead(400, { "Content-Type": "text/plain" });
-                client.end("Invalid Credentials");
-                reject(err);
-              } else {
-                const username = user.name;
-
-                const db = client.db(dbName);
-                console.log("Database Connected");
-
-                db.collection("HomeAway").findOne(
-                  { "user.username": username },
-                  (findErr, result) => {
-                    if (findErr) {
-                      console.error("Error finding user:", findErr);
-                      client.writeHead(400, { "Content-Type": "text/plain" });
-                      client.end("Invalid Credentials");
-                      reject(findErr);
-                    } else {
-                      console.log("USERNME", user);
-
-                      bcrypt.compare(
-                        user.password,
-                        result.user.password,
-                        (bcryptErr, answer) => {
-                          if (bcryptErr) {
-                            console.error(
-                              "Error comparing passwords:",
-                              bcryptErr
-                            );
-                            reject(bcryptErr);
-                          } else {
-                            console.log("USERNME bcrypt", user);
-
-                            if (answer) {
-                              console.log("Successfully retrieving User");
-                              console.log(
-                                "Username is " + JSON.stringify(username)
-                              );
-
-                              const body = { _id: user.name, type: "traveler" };
-                              const token = jwt.sign(
-                                { user: body },
-                                "verified_homeawayUser"
-                              );
-
-                              // Send the token or use it as needed
-                              resolve({ username: token });
-                            } else {
-                              console.log("Invalid Credentials");
-                              resolve({ username: "username" });
-                            }
-                          }
-                        }
-                      ); // bcrypt.compare
-                    }
-                  }
-                ); // db.collection
+          HomeAway.findOne(
+            { "user.username": user.name },
+            (findErr, results) => {
+              if (findErr) {
+                reject(findErr);
               }
+              if (results === null) {
+                reject({ username: "User not found" });
+              }else{
+              bcrypt.compare(
+                user.password,
+                results.user.password,
+                (bcryptErr, ans) => {
+                  if (bcryptErr) {
+                    reject(bcrypt);
+                  }
+                  if (ans) {
+                    const body = { _id: user.name, type: "traveler" };
+                    const token = jwt.sign(
+                      { user: body },
+                      "verified_homeawayUser"
+                    );
+
+                    resolve({ username: token });
+                  }
+                }
+              );
             }
-          ); // MongoClient.connect
+            }
+          );
+
+          //             bcrypt.compare(
+          //               user.password,
+          //               result.user.password,
+          //               (bcryptErr, answer) => {
+          //                 if (bcryptErr) {
+          //                   console.error(
+          //                     "Error comparing passwords:",
+          //                     bcryptErr
+          //                   );
+          //                   reject(bcryptErr);
+          //                 } else {
+          //                   console.log("USERNME bcrypt", user);
+
+          //                   if (answer) {
+          //                     console.log("Successfully retrieving User");
+          //                     console.log(
+          //                       "Username is " + JSON.stringify(username)
+          //                     );
+
+          //                     const body = { _id: user.name, type: "traveler" };
+          //                     const token = jwt.sign(
+          //                       { user: body },
+          //                       "verified_homeawayUser"
+          //                     );
+
+          //                     // Send the token or use it as needed
+          //                     resolve({ username: token });
+          //                   } else {
+          //                     console.log("Invalid Credentials");
+          //                     resolve({ username: "username" });
+          //                   }
+          //                 }
+          //               }
+          //             ); // bcrypt.compare
+          //           }
+          //         }
+          //       ); // db.collection
+          //     }
+          //   }
+          // );
         });
       },
     },
@@ -213,70 +219,40 @@ const RootQuery = new GraphQLObjectType({
           id: args.id,
         };
         return new Promise((resolve, reject) => {
-          console.log("arsgs", user);
-          MongoClient.connect(
-            url,
-            { poolSize: 10, useNewUrlParser: true, useUnifiedTopology: true },
-            (err, client) => {
-              if (err) {
-                resolve(err);
-              } else {
-                var username = user.name;
-
-                const db = client.db(dbName);
-                console.log("Database Connected");
-                db.collection("HomeAway").findOne(
-                  { "user.username": username },
-                  function (findErr, result) {
-                    if (findErr) {
-                      resolve(findErr);
-                    } else {
-                      console.log("Owner login USERNME", result);
-                      bcrypt.compare(
-                        user.password,
-                        result.user.password,
-                        function (err, answer) {
-                          console.log("USERNME bcrypt", user);
-                          //  let answer = (result.password === password)
-                          console.log("answer is " + JSON.stringify(answer));
-                          if (answer) {
-                            console.log("Herethree");
-                            const body = {
-                              _id: user.name,
-                              type: "owner",
-                            };
-                            const token = jwt.sign(
-                              { user: body },
-                              "verified_homeawayUser"
-                            );
-
-                            console.log("Successfully retrieving User");
-                            console.log(
-                              "Username is " + JSON.stringify(username)
-                            );
-                            // res.status(200).send(token);
-                            //  res.end("Successful Login");
-                            var result = {
-                              username: token,
-                            };
-                            resolve(result);
-                          } //if
-                          else {
-                            var result = {
-                              username: "username",
-                            };
-
-                            resolve(result);
-                          }
-                        }
-                      ); //bcrypt
-                    } //else
+          HomeAway.findOne(
+            { "user.username": user.name },
+            (findErr, results) => {
+              if (findErr) {
+                reject(findErr);
+              }
+              if (results === null) {
+                reject({ username: "User not found" });
+              }else{
+              bcrypt.compare(
+                user.password,
+                results.user.password,
+                (bcryptErr, ans) => {
+                  if (bcryptErr) {
+                    reject(bcrypt);
                   }
-                ); //db collection
-                
-              } //else
+                  if (ans) {
+                    const body = {
+                      _id: user.name,
+                      type: "owner",
+                    };
+                    const token = jwt.sign(
+                      { user: body },
+                      "verified_homeawayUser"
+                    );
+
+                    resolve({ username: token });
+                  }
+                }
+              );
+            }
             }
           );
+
         });
       },
     },
@@ -570,7 +546,6 @@ const Mutation = new GraphQLObjectType({
           email: args.email,
         };
         return new Promise((resolve, reject) => {
-          console.log("signup user ", user);
           bcrypt.hash(user.password, saltRounds, function (err, hash) {
             hashed_password = hash;
 
@@ -636,7 +611,6 @@ const Mutation = new GraphQLObjectType({
           email: args.email,
         };
         return new Promise((resolve, reject) => {
-          console.log("owner signup user ", user);
           bcrypt.hash(user.password, saltRounds, function (err, hash) {
             hashed_password = hash;
 
@@ -646,7 +620,7 @@ const Mutation = new GraphQLObjectType({
                 password: hashed_password,
                 Fname: user.fname,
                 Lname: user.lname,
-                isOwner: true,
+                isTraveler: true,
               },
             });
 
@@ -656,10 +630,8 @@ const Mutation = new GraphQLObjectType({
               .then(function () {
                 // results.value = req.body;
                 //  results.code = 200;
-
                 const body = { _id: user.email, type: "owner" };
                 const token = jwt.sign({ user: body }, "verified_homeawayUser");
-
                 //res.status(200).send(token);
 
                 //  callback(null, res);

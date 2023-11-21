@@ -50,7 +50,7 @@ var ownersignup = require("./controllers/ownersignup");*/
 // import { profile } from "./controllers/profile";
 
 //use cors to allow cross origin resource sharing
-app.use(cors({ origin: "http://83.85.157.106:3000", credentials: true }));
+app.use(cors({credentials: true }));
 
 //use express session to maintain session data
 app.use(
@@ -2044,6 +2044,8 @@ app.use(
     graphiql: true
   })
 );
+
+
 app.listen(8080, () => {
   console.log("GraphQL server started on port 8080");
 });

@@ -7,6 +7,7 @@ import PropTypes from "prop-types";
 import Button from "@material-ui/core/Button";
 import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 import Grow from "@material-ui/core/Grow";
+
 import Paper from "@material-ui/core/Paper";
 import Popper from "@material-ui/core/Popper";
 import MenuItem from "@material-ui/core/MenuItem";
@@ -26,15 +27,15 @@ class Navbar extends Component {
       myProfile: "",
       tripboards: "",
       ownerDashboard: "",
-      open: false
+      open: false,
     };
     this.handleOwnerLogin = this.handleOwnerLogin.bind(this);
   }
   handleToggle = () => {
-    this.setState(state => ({ open: !state.open }));
+    this.setState((state) => ({ open: !state.open }));
   };
 
-  handleClose = event => {
+  handleClose = (event) => {
     if (this.anchorEl.contains(event.target)) {
       return;
     }
@@ -52,7 +53,7 @@ class Navbar extends Component {
         travellerLogin: "",
         tripboards: "Tripboards",
         ownerDashboard: "",
-        myProfile: "My Profile"
+        myProfile: "My Profile",
       });
     }
 
@@ -64,18 +65,18 @@ class Navbar extends Component {
         travellerLogin: "",
         tripboards: "",
         ownerDashboard: "Owner Dashboard",
-        myProfile: "My Profile"
+        myProfile: "My Profile",
       });
     }
 
     this.setState({
-      userId: userId
+      userId: userId,
     });
   }
   handleOwnerLogin = () => {
     this.setState({
       isOwner: true,
-      isTraveller: false
+      isTraveller: false,
     });
   };
 
@@ -177,7 +178,7 @@ class Navbar extends Component {
               className="dropdown-item"
               // onClick={this.handleOwnerLogin}
               href="/"
-              onClick={e => this.handleLogout("owner", e)}
+              onClick={(e) => this.handleLogout("owner", e)}
             >
               Logout
             </a>
@@ -229,7 +230,7 @@ class Navbar extends Component {
               className="dropdown-item"
               // onClick={this.handleOwnerLogin}
               href="/"
-              onClick={e => this.handleLogout("traveller", e)}
+              onClick={(e) => this.handleLogout("traveller", e)}
             >
               Logout
             </a>
@@ -252,26 +253,36 @@ class Navbar extends Component {
     }
 
     return (
+      //           <div style={{padding:"10px",color:}}>
+      //           <h1>Your App Name</h1>
+
+      //           </div>
+
+      // {/*
+      //       <div style={imageContainerStyle}>
+      //         <img src={imageSrc} alt="Bottom Image" style={imageStyle} />
+      //       </div> */}
+
       <div>
         <nav className="navbar navbar-inverse custom-nav">
           <div className="container-fluid">
             <div className="navbar-header" />
-            <ul className="nav navbar-nav">
-              <li className="">
-                <Link to="/Home">
-                  <img src="//csvcus.homeaway.com/rsrcs/cdn-logos/2.10.6/bce/moniker/homeaway_us/logo-bceheader.svg" />
-                </Link>
-              </li>
-            </ul>
+              <ul className="nav navbar-nav">
+                <li className="">
+                  <Link to="/Home">
+                    <img src="//csvcus.homeaway.com/rsrcs/cdn-logos/2.10.6/bce/moniker/homeaway_us/logo-bceheader.svg" />
+                  </Link>
+                </li>
+              </ul>
 
-            <ul className="right-menu">
-              <li />
-              <li />
-              <li />
-              <li>{userProfile}</li>
-              {navLogin}
-            </ul>
-            {homeAwayLogo}
+              <ul className="right-menu">
+                <li />
+                <li />
+                <li />
+                <li>{userProfile}</li>
+               {navLogin}
+             </ul>
+              {homeAwayLogo}
           </div>
         </nav>
       </div>

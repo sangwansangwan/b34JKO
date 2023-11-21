@@ -90,7 +90,7 @@
   border: 2px solid black;
 }
 .navbar-inverse {
-  background-color: transparent !important;
+  /* background-color: transparent !important; */
   border-color: #080808;
 }
 .btn btn-default btn-inverse {
@@ -151,6 +151,7 @@
   background-image: none;
   color: black;
 }
+
 .Location-parent {
   box-shadow: 0 10px 40px 0 rgba(0, 0, 0, 0.15);
   padding: 40px;
